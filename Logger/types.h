@@ -3,8 +3,10 @@
 #define TYPES_H
 
 #include <string>
-#define NODEBUG //必须在assert包含之前定义
-#include <assert.h>//assert(param) 当参数为false时终止程序的调用，这些都是在DEBUG模式下采用作用，如果是NODEBUG模式则不起作用，需要在include<assert>之前添加宏定义
+#include <cstddef>
+#include <cstdio>
+//#define NODEBUG //必须在assert包含之前定义
+#include <cassert>//assert(param) 当参数为false时终止程序的调用，这些都是在DEBUG模式下采用作用，如果是NODEBUG模式则不起作用，需要在include<assert>之前添加宏定义
 namespace Logger {
 	//using std::string;
 
