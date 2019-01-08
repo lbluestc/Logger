@@ -64,7 +64,7 @@ namespace Logger {
 		const char *str_;
 	};
 
-	class StringPiece {
+	class StringPiece {//字符串的代理类  string view   https://www.zhihu.com/question/34499426
 	private:
 		const char*ptr_;
 		int length_;

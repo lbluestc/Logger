@@ -24,11 +24,31 @@ typedef 的作用域可以在类中，也可以的在函数中
 前者只是进行简单的替换，后者还需要进行一系列类型的检查
 
 */
+
+/*
+static_assert(常量表达式,提示字符串)
+C++11静态断言，用于做编译期间的断言；
+用编译器强制保证契约，尤其是用于模板的时候；
+编译器遇到static_assert的时候 通常会立即计算表达式的值，但是如果表达式依赖于某些模板参数，则会延迟到模板实例化时在进行演算；
+这就让检查模板参数成为了可能。
+由于是编译期间的断言，因此不会造成任何运行期间的损失；
+*/
+
+/*
+std::numeric_limits<type>..
+https://blog.csdn.net/wordwarwordwar/article/details/39344131
+在C++11中 numeric_limits为模板类，在编译平台提供极值等信息，取代传统C语言的预处理常数；
+常用的使用是对于给定的基础类型用来判断在当前系统上的最大值和最小值等。
+min() 返回可取的最小值
+digits10() 返回目标类型在十进制下可以表示的最大位数
+epsilon()  返回目标数据类型表示的最逼近1的正数和1的绝对值
+*/
 namespace Logger {
 	namespace detail {
 		const int kSmallBuffer = 4000;//最小缓存大小
 		const int kLargerBuffer = 4000 * 1000;//最大缓存大小
 
+	/*-----------固定大小的Buffer------------*/
 		template<int SIZE>//模板参数
 		class FixedBuffer :nocopyable {//默认是private继承，
 		private:
@@ -90,20 +110,47 @@ namespace Logger {
 			}
 		};
 
+		/*---------日志流----------*/
 		class LogStream :nocopyable {
 			typedef LogStream self;
 			typedef detail::FixedBuffer<detail::kSmallBuffer> Buffer;//小的缓存片
 		private:
-			void staticCheck();
+			void staticCheck();//编译期间对kMaxNumericSize进行检查
 
 			template<class T>
 			void formatInteger(T);
-
+			static const int kMaxNumericSize = 32;
 			Buffer buffer_;
 		public:
-			self& operator<<(bool v) {
-				buffer_.append(v ? "1" : "0",1);
-				return *this;
+			self& operator<<(bool v);
+			self& operator<<(short v);
+			self& operator<<(unsigned short v);
+			self& operator<<(int v);
+			self& operator<<(unsigned int v);
+			self& operator<<(long v);
+			self& operator<<(unsigned long v);
+			self& operator<<(long long v);
+			self& operator<<(unsigned long long v);
+			self& operator<<(const void *v);
+			self& operator<<(float v);
+			self& operator<<(double v);
+			self& operator<<(char v);
+			self& operator<<(const char* v);
+			self& operator<<(const unsigned char* v);
+			self& operator<<(const std::string& v);
+			self& operator<<(const StringPiece &v);
+			self& operator<<(const Buffer& v);
+
+			void append(const char*data, int len) {
+				buffer_.append(data, len);
+			}
+
+			const Buffer& buffer()const {
+				return buffer_;
+			}
+
+			void resetBuffer() {
+				buffer_.reset();
 			}
 		};
 	}
