@@ -172,5 +172,27 @@ namespace Logger {
 				buffer_.reset();
 			}
 		};
+
+		class Fmt {
+		public:
+			template<typename T>
+			Fmt(const char* fmt, T val) {
+				static_assert(std::is_arithmetic<T>::value == true, "Must be arithmetic type");
+				length_ = snprintf(buf_, sizeof(buf_), fmt, val);
+				assert(static_cast<size_t>(length_) < sizeof(buf_));
+			}
+
+			const char*data()const { return buf_; }
+			int length()const { return length_; }
+		private:
+			char buf_[32];
+			int length_;
+		};
+
+		inline LogStream&operator<<(LogStream&s, const Fmt&fmt) {
+			s.append(fmt.data(), fmt.length());
+			return s;
+		}
+
 	}
 }
