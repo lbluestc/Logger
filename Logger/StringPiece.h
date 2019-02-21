@@ -31,7 +31,7 @@ C++成员变量的初始化顺序：
 */
 
 /*
-memecmp();对比字符串的大小，前两个参数为 需要比较的串，第三个为需要对比的长度
+memcmp();对比字符串的大小，前两个参数为 需要比较的串，第三个为需要对比的长度
 */
 
 /*
@@ -71,12 +71,12 @@ namespace Logger {
 
 	public:
 	/***构造函数***/
-		StringPiece()
+		StringPiece()//全为空
 			:ptr_(NULL),
 			length_(0)
 		{}
 
-		StringPiece(const char*str)
+		StringPiece(const char*str)//字符串初始化
 			:ptr_(str),
 			length_(static_cast<int>(strlen(ptr_)))
 		{}
